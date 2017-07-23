@@ -1,0 +1,67 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <script src="index.js"></script></head> -->
+
+    <body>
+
+
+        <script>
+            var Factory = function () {
+                if (this instanceof Factory) {
+                    var s = new this[type](content);
+                    return s;
+                } else {
+                    return new Factory();
+                }
+            }
+            Factory.prototype = {
+                java: function (content) {
+                    //...
+                },
+                javascript: function (content) {
+                    //...
+
+                },
+                UI: function (content) {
+                    this.content = content;
+                    (function (content) {
+                        var div = document.createElement("div");
+                        div.innerHTML = content;
+                        div.style.border = "1px solid red";
+                        document.getElementById("container").appendChild(div);
+                    })(content)
+                },
+                php: function () {
+                    //...
+                }
+            }
+
+
+            var data = [
+                {
+                    type: 'js',
+                    content: 'js哪家强'
+                },
+                {
+                    type: 'UI',
+                    content: 'js哪家强'
+                },
+                {
+                    type: 'js',
+                    content: 'js哪家强'
+                },
+                {
+                    type: 'UI',
+                    content: 'js哪家强'
+                }
+            ];
+            for (var i = data.length; i >= 0; i++) {
+                Factory(data[i].type, data[i].content);
+            }
+        </script>
+    </body>
+
+</html>
