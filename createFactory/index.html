@@ -1,0 +1,94 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>创建者模式</title>
+    </head>
+    <body>
+        <script>
+            var Human = function(param){
+                this.skill = param && param.skill || '保密';
+                this.hobby = param && param.hobby || '保密';
+            }
+            Human.prototype = {
+                getSkill :function(){
+                    return this.skill;
+                },
+                getHobby:function(){
+                    return this.hobby;
+                }
+            }
+            //实例化姓名类
+           var  Named = function(name){
+               var that = this;
+               (function(name,that){
+                   that.wholeName = name;
+                   if(name.indexOf(" ")> -1){
+                        that.FirstName = name.slice(0,name.indexOf(' '));
+                        that.SecendName = name.slice(name.indexOf(' '));
+                   }
+               })(name,that)
+           }
+            //实例化职位
+            var Work = function(work){
+                var that = this;
+                (function(that,work){
+                    switch (work) {
+                        case 'code':
+                            that.work = '工程师';
+                            that.workDescrip = '每天沉醉于编程';
+                            break;
+                        case 'UI':
+                            that.work = 'UI设计师';
+                            that.workDescrip = '设计是一门艺术';
+                            break;
+                        case 'UE':
+                            that.work = 'UE设计师';
+                            that.workDescrip = '绘制各种插画';
+                            break;
+                        case 'teach':
+                            that.work = '教师';
+                            that.workDescrip = '人类灵魂的工程师';
+                            break;
+                        default:
+                            that.work = work;
+                            that.workDescrip = '对不起没有找到工作岗位描述';
+                            break;
+                    }
+                })(that,work)
+            }
+            Work.prototype.changeWork = function(work){
+                this.work = work;
+            }
+            Work.prototype.changeDescrip = function(setence){
+                this.workDescrip = setence;
+            }
+
+            /**
+             * 
+             * 
+             * 
+             * 应聘者
+             * 参数 name:姓名（全名）；
+             * 参数 work:期望岗位
+            */
+            var Person = function(name, work){
+                var _person = new Human();
+                _person.name = new Named(name);
+                _person.work = new Work(work);
+                return _person;
+            }
+            var person = new Person('尹 品','code');
+            console.log(person.skill);
+            console.log(person.name.FirstName);
+
+            console.log(person.name.SecendName);
+
+            console.log(person.work.work);
+
+            console.log(person.work.workDescrip);
+            person.work.changeDescrip('更改一下职位描述');
+            console.log(person.work.workDescrip);
+        </script>
+    </body>
+</html>

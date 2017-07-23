@@ -1,0 +1,34 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>单例模式</title>
+    </head>
+    <body>
+        <script>
+           var Ming = {
+               g:function(id){
+                   return document.getElementById(id);
+               },
+                css:function(id,key,value){
+                    return this.g(id).style[key]= value
+                }
+           };
+            //创建静态私有变量
+            var Conf = (function(){
+                var conf = {
+                    MAX_NUM:100,
+                    MIN_NUM:1,
+                    COUNT:1000
+                }
+                return {
+                    get:function(name){
+                        return conf[name]?conf[name]:null;
+                    }
+                }
+            })();
+            var con = Conf.get("MIN_NUM");
+            console.log(con);
+        </script>
+    </body>
+</html>

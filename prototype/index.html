@@ -1,0 +1,87 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>原型模式</title>
+    </head>
+    <body>
+        <script>
+           var LoopImages = function(imgArr, containner){
+               this.imagesArrays = imgArr;
+               this.containner = containner;
+           }
+            LoopImages.prototype = {
+                createImage : function(){
+                    console.log("create images function");
+                },
+                changeImages:function(){
+                    console.log('Loop change images function ');
+                }
+            }
+            var SliderLoopImage = function(imgArr, containner){
+                LoopImages.call(this, imgArr, containner);
+            }
+            SliderLoopImage.prototype = new LoopImages();
+            SliderLoopImage.prototype.changeImages = function(){
+                console.log("sliderLoopimages changeImages function ");
+            }
+            var FadeImg = function(imgArr, containner, arrow){
+                LoopImages.call(this,imgArr, containner);
+                this.arrow = arrow;
+            }
+            FadeImg.prototype = new LoopImages();
+            FadeImg.prototype.changeImages = function(){
+                console.log('Fadeloop images changeImages function ');
+            }
+            var fadeImg = new FadeImg(['1.gpg'],'slider',['left','right']);
+            console.log(fadeImg.containner);
+
+            //原型拓展
+            LoopImages.prototype.getImageLength = function(){
+                return this.imagesArrays.length;
+            };
+            FadeImg.prototype.getContainner = function(){
+                return this.containner;
+            }
+            console.log(fadeImg.getImageLength());
+
+            console.log(fadeImg.getContainner());
+
+
+            //原型继承
+            function prototypeExtend(){
+                var F =  function(){},
+                    args = arguments,
+                    i=0,len = arguments.length;
+                    for(;i<len;i++){
+                        for(var j in args[i]){
+                            F.prototype[j] = args[i][j];
+                        }
+                    }
+                return new F();
+            }
+            var penguin = prototypeExtend({
+                speed:20,
+                swim:function(){
+                    console.log('游泳速度'+this.speed);
+                }
+            },{
+                run:function(speed){
+                    console.log('奔跑速度'+speed);
+                },jump:function(){
+                    console.log('跳跃动作');
+                }
+            });
+            var dog = prototypeExtend({
+                speed:100,
+                hit:function(hede){
+                    console.log(hede);
+                }
+            })
+            penguin.swim();
+            penguin.run(10);
+            penguin.jump();
+            dog.hit(80);
+        </script>
+    </body>
+</html>
