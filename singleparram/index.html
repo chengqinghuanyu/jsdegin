@@ -29,6 +29,27 @@
             })();
             var con = Conf.get("MIN_NUM");
             console.log(con);
+
+            //单例模式 延时创建
+            var LazySingle = (function(){
+                //单例实例引用
+                var instance = null;
+                function single(){
+                    return {
+                        publicMethod:function(){
+                            alert('publicMethd');
+                        },
+                        publicProperty:'1.0'
+                    }
+                }
+                return function(){
+                    if(!instance){
+                        instance = single();
+                    }
+                    return instance;
+                }
+            })()
+            console.log(LazySingle().publicMethod());
         </script>
     </body>
 </html>
