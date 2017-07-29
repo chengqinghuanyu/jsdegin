@@ -1,0 +1,76 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>代理模式</title>
+    </head>
+    <body>
+        <script>
+          var Count = (function(){
+              var img = new Image();
+              return function(param){
+                  var str = "http://www.baidu.com/a.gif?";
+                  for(var i in param){
+                    str+=i+"="+param[i];
+                  }
+                img.src = str;
+              }
+          })()
+            Count({num:10});
+            //script标签
+            function jsonpCallBack(res,req){
+                console.log(res,req);
+            }
+            
+</script>
+<script src="http://localhost/web/jsdegign/proxyparram.jsonp.php?callback=jsonp_callback&data=getjsonpdata>
+</script>
+   //X域名中的被代理页面A
+<script >
+    function callBack(data){
+        console.log("成功接收数据",data);
+    }
+</script> 
+<iframe name="proxyIframe" >
+
+ </iframe>
+<form action="http://loaclhost/test/proxy.php" method="post" target="proxyIframe">
+<input  type="text" name="callback" value="callback"/>
+<input  type="text" name="callback" value="callback"/>
+<input  type="text" name="proxy" value="http://localhost:8080/proxy.html"/>
+<input type="submit" value="提交">
+</form>
+
+//X域名中的代理页面B
+window.onload = function(){
+
+    if(top==self){
+        var arr = localtion.search.substr(1).splite("&");
+        var fn,args;
+        for(i=0,len = arr.length,item;i<len;i++){
+            item = arr[i].splite("=");
+            if(item[0] == "callback"){
+                fn = item[i];
+            }else if(item[0] == 'arg'){
+                args = item[1];
+            }
+        }
+        try{
+            eval('top'+fn+'("'+args+'")');
+        }catch(e){
+
+        }
+    }
+}
+Y域名中接口C重新定向Header;
+<?php
+$proxy = $_POST["proxy"];
+$callback = $_POST["callback"];
+header("Location:".$proxy."?callback=".$callback."&args=success")
+?>
+
+</body>
+
+
+
+</html>
