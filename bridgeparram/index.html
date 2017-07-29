@@ -1,0 +1,74 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>桥接模式</title>
+</head>
+
+<body>
+
+    <script>
+        function Speed(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Speed.prototype.run = function() {
+            console.log("运动起来");
+        }
+
+        function Color(cl) {
+            this.coloe = cl;
+        }
+        Color.prototype.draw = function() {
+            console.log("绘制颜色");
+        }
+
+        function Shape(sp) {
+            this.shape = sp;
+        }
+        Shape.prototype.change = function() {
+            console.log("改变形状");
+        }
+
+        function Speek(wd) {
+            this.word = wd;
+        }
+        Speek.prototype.say = function() {
+            console.log("字体");
+        }
+
+        function Ball(x, y, z) {
+            this.speed = new Speed(x, y);
+            this.color = new Color(z);
+        }
+        Ball.prototype.init = function() {
+            this.speed.run();
+            this.color.draw();
+        }
+
+        function People(x, y, z) {
+            this.speed = new Speed(x, y);
+            this.font = new Speek(z);
+        }
+        People.prototype.init = function() {
+            this.speed.run();
+            this.font.say();
+        }
+
+        function Sprite(x, y, c, s) {
+            this.speed = new Speed(x, y);
+            this.color = new Color(c);
+            this.shape = new Shape(s);
+        }
+        Sprite.prototype.init = function() {
+            this.speed.run();
+            this.color.draw();
+            this.shape.change();
+        }
+        var p = new People(10, 20, 16);
+        p.init();
+    </script>
+</body>
+
+</html>
