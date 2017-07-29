@@ -1,0 +1,51 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>装饰者模式模式</title>
+</head>
+
+<body>
+    <form>
+        <input type="text" id="tel_input"><span id="tel_deomo_text">111</span>
+        <input type="text" id="name_input"><span id="name_deomo_text">222</span>
+        <input type="text" id="address_input"><span id="address_deomo_text">333</span>
+    </form>
+    <script>
+        function decorator(input, fn) {
+            //获取事件源
+            var input = document.getElementById(input);
+            //如果事件源已经绑定事件
+
+            if (typeof input.onfocus === "function") {
+                //缓存原有回调函数
+                var oldClickFn = input.onfocus;
+                //为事件定义新的事件
+                input.onfocus = function() {
+                    //回调原有回调函数
+                    oldClickFn();
+                    //执行新函数
+                    fn();
+                    console.log(11);
+
+                }
+            } else {
+                input.onfocus = fn;
+
+            }
+        }
+        decorator("tel_input", function() {
+            document.getElementById("tel_deomo_text").style.display = 'none';
+            console.log(22);
+        });
+        decorator("name_input", function() {
+            document.getElementById("name_deomo_text").style.display = 'none';
+        });
+        decorator("address_input", function() {
+            document.getElementById("address_deomo_text").style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
