@@ -1,0 +1,222 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>组合模式---组合表单练习</title>
+</head>
+
+<body>
+
+    <script>
+        var Base = function() {
+            this.chilren = [];
+            this.element = null;
+        }
+        Base.prototype = {
+            init: function() {
+                throw new Errow("请重写你的方法");
+            },
+            add: function() {
+                throw new Errow("请重写你的方法");
+            },
+            getElement: function() {
+                throw new Errow("请重写你的方法");
+            }
+        }
+
+        var FormItem = function(id, parent) {
+                Base.call(this);
+                this.id = id;
+                this.parent = parent;
+                this.init();
+            }
+            //寄生的方法进行继承
+        function inhertitObject(o) {
+            function F() {}
+            F.prototype = o;
+            return new F();
+        }
+
+        function inheritPrototype(subClass, superClass) {
+            var p = new inhertitObject(superClass.prototype);
+            p.constructor = subClass;
+            subClass.prototype = p;
+        }
+        //寄生模式继承父类原型方法
+        inheritPrototype(FormItem, Base);
+        //构建方法
+        FormItem.prototype.init = function() {
+                this.element = document.createElement("form");
+                this.element.id = this.id;
+                this.element.className = 'form-container';
+            }
+            //添加子元素
+        FormItem.prototype.add = function(child) {
+                //在子元素中插入子元素
+                this.chilren.push(child);
+                //插入当前组件元素树中
+                if (this.element != null) {
+                    this.element.appendChild(child.getElement());
+                }
+
+                return this;
+            }
+            //获取当前元素方法
+        FormItem.prototype.getElement = function() {
+                return this.element;
+            }
+            //显示方法
+        FormItem.prototype.show = function() {
+            this.parent.appendChild(this.element);
+
+            //this.parent.appendChild(this.chilren);
+        }
+
+        var FieldsetItem = function(classname, textname) {
+            Base(this);
+            this.classname = classname || "";
+            this.textname = textname || "";
+            this.init();
+        }
+        inheritPrototype(FieldsetItem, Base);
+        FieldsetItem.prototype.init = function() {
+            this.element = document.createElement("fieldset");
+            this.element.className = this.classname;
+
+            var legend = document.createElement("legend");
+            legend.innerHTML = this.textname;
+            this.element.appendChild(legend);
+
+        }
+        FieldsetItem.prototype.add = function(child) {
+            console.log(child);
+            if (typeof this.chilren != "undefined") {
+                this.chilren.push(child);
+                this.element.appendChild(child.getElement());
+            }
+
+            return this;
+        }
+        FieldsetItem.prototype.getElement = function() {
+            return this.element;
+        }
+        var Group = function(classname) {
+            Base.call(this);
+            this.classname = classname || '';
+            this.init();
+        }
+        inheritPrototype(Group, Base);
+        Group.prototype.init = function() {
+            this.element = document.createElement("div");
+            this.element.className = this.classname;
+        }
+        Group.prototype.add = function(child) {
+            this.chilren.push(child);
+            var ui = child.getElement();
+            if (ui != null) {
+                this.element.appendChild(ui);
+
+            }
+            return this;
+
+        }
+        Group.prototype.getElement = function() {
+            return this.element;
+        }
+
+
+        var LabelItem = function(classname, textname) {
+            Base.call(this);
+            this.classname = classname || "";
+            this.textname = textname || "";
+            this.init();
+        }
+        inheritPrototype(LabelItem, Base);
+        LabelItem.prototype.init = function() {
+            this.element = document.createElement('ul');
+
+            this.element.className = this.classname;
+            var li = document.createElement("li");
+            li.className = "li_" + this.classname;
+
+            this.element.appendChild(li);
+
+        }
+        LabelItem.prototype.add = function() {
+            this.chilren.push(child);
+            this.element.appendChild(child.getElement());
+            return this;
+        }
+        LabelItem.prototype.getElement = function() {
+            return this.element;
+        }
+        var InputItem = function(classname) {
+            Base.call(this);
+            this.classname = classname;
+            this.init();
+        }
+        inheritPrototype(InputItem, Base);
+        InputItem.prototype.init = function() {
+
+            var inputc = document.createElement("input");
+            inputc.className = this.classname;
+            inputc.name = this.classname;
+            inputc.value = '';
+            //li.appendChild(inputc);
+        }
+        InputItem.prototype.add = function() {
+
+        }
+        InputItem.prototype.getElement = function() {
+            return this.element;
+        }
+
+        var SpanItem = function(textname) {
+            this.textname = textname || "";
+            this.classname = this.classname || "tips";
+            this.init();
+        }
+        inheritPrototype(SpanItem, Base);
+        SpanItem.prototype.init = function() {
+            this.element = document.createElement("span");
+            this.element.className = 'span_' + this.classname;
+            this.element.innerHTML = this.textname;
+        }
+        SpanItem.prototype.add = function() {}
+        SpanItem.prototype.getElement = function() {
+            return this.element;
+        }
+        var form = new FormItem('FormItem', document.body);
+        form.add(
+            new FieldsetItem("account", "账号").add(
+                new Group().add(
+                    new LabelItem("user_name", "用户名")
+                ).add(
+                    new InputItem("user_name")
+                ).add(
+                    new SpanItem("4-6位数字或者字母")
+                )
+            ).add(
+                new Group().add(
+                    new LabelItem("user_passworld", '密码')
+                ).add(
+                    new InputItem('user_passworld')
+                ).add(
+                    new SpanItem('6-12位数字或字母')
+                )
+            )
+        ).show();
+    </script>
+    <fieldset>
+        <legend>健康信息</legend>
+        <ul>
+            <li> 身高：<input type="text" /></li>
+            <li> 体重：<input type="text" /></li>
+        </ul>
+
+
+    </fieldset>
+</body>
+
+</html>
