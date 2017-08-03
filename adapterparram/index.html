@@ -1,53 +1,57 @@
 <!DOCTYPE>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>适配器模式</title>
-    </head>
-    <body>
-        <script>
-          function dosom(obj){
-              var _obj={
-                  name:"尹鹏孝",
-                  title:"learnning",
-                  age:"29",
-                  color:"pink",
-                  size:"100",
-                  price:50
-              }
-              for(var i in _obbj){
-                _obj[i] = obj[i]||_obj[i];
-              }
-              //extends(_obj,obj);
-          }
 
-          var obj ={
-              name:"",
-              type:"",
-              title:"",
-              tiem:""
-          }
-          var arr = ["js","book","q前端","8.1"]
-          function attrToObjAdapter(attr){
-              return {
-                  name:attr[0],
-                  type:attr[1],
-                  title:attr[2],
-                  data:attr[3]
-              }
-          }
-          var adapterData = attrToObjAdapter(arr);
+<head>
+    <meta charset="utf-8">
+    <title>适配器模dd式</title>
+</head>
 
-          //ajax适配器
-        function ajaxAdapter(data){
-            return [data["key1"],data["key1"],data["key1"],data["key1"]]
+<body>
+    <script>
+        function dosom(obj) {
+            var _obj = {
+                name: "尹鹏孝",
+                title: "learnning",
+                age: "29",
+                color: "pink",
+                size: "100",
+                price: 50
+            }
+            for (var i in _obbj) {
+                _obj[i] = obj[i] || _obj[i];
+            }
+            //extends(_obj,obj);
+        }
+
+        var obj = {
+            name: "",
+            type: "",
+            title: "",
+            tiem: ""
+        }
+        var arr = ["js", "book", "q前端", "8.1"]
+
+        function attrToObjAdapter(attr) {
+            return {
+                name: attr[0],
+                type: attr[1],
+                title: attr[2],
+                data: attr[3]
+            }
+        }
+        var adapterData = attrToObjAdapter(arr);
+
+        //ajax适配器
+        function ajaxAdapter(data) {
+            return [data["key1"], data["key1"], data["key1"], data["key1"]]
         }
         $.ajax({
-            url:"test.php",
-            success:function(data,status){
+            url: "test.php",
+            success: function(data, status) {
                 dosome(ajaxAdapter(data));
             }
         })
-</script>
-    </body>
+    </script>
+</body>
+
 </html>
