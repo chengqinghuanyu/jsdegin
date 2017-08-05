@@ -1,0 +1,124 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>观察者模式</title>
+    <style>
+        li span {
+            width: 10px;
+            height: 10px;
+            background: #eee;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        window.onload = function() {
+
+
+            var Observer = (function() {
+                var __messages = {};
+                return {
+                    regist: function(type, fn) {
+                        if (typeof __messages[type] === "undefined") {
+                            __messages[type] = [fn];
+                        } else {
+                            __messages[type].push(fn);
+                        }
+                    },
+                    fire: function(type, args) {
+                        if (!__messages[type]) {
+                            return
+                        }
+                        var events = {
+                                type: type,
+                                args: args || {}
+                            },
+                            i = 0,
+                            len = __messages[type].length;
+                        for (; i < len; i++) {
+                            __messages[type][i].call(this, events);
+                        }
+                    },
+                    remove: function(type, fn) {
+                        if (__messages[type] instanceof Array) {
+                            var i = __messages[type].length - 1;
+                            for (; i >= 0; i--) {
+                                __messages[type][i] === fn && __messages[type].splice(i, 1);
+                            }
+                        }
+                    }
+                }
+            })()
+
+
+            Observer.regist("test", function(e) {
+                console.log(e.type, e.args.msg);
+            });
+            Observer.fire("test", {
+                msg: '传递参数'
+            });
+
+            function $(id) {
+                return document.getElementById(id);
+            };
+            (function(e) {
+                function addMessage(e) {
+                    var text = e.args.text,
+                        ul = $('msg'),
+                        li = document.createElement("li"),
+                        span = document.createElement("span");
+                    li.innerHTML = text;
+                    span.onclick = function() {
+                        ul.removeChild(li);
+                        Observer.fire("revoveCommenMessage", function() {
+                            num: -1;
+                        });
+
+                    }
+                    li.appendChild(span);
+                    ul.appendChild(li);
+                }
+                Observer.regist("addCommenMessage", addMessage);
+            })();
+
+            (function() {
+                function changeMsgNum(e) {
+                    e.args.num ? e.args.num : 0;
+                    var num = e.args.num;
+                    var n = parseInt($('msg_num').innerHTML);
+                    n = isNaN(n) ? 0 : num;
+                    $('msg_num').innerHTML = n + num;
+                }
+                Observer.regist("addCommenMessage", changeMsgNum);
+                Observer.regist("revoveCommenMessage", changeMsgNum);
+            })();
+            (function() {
+                $("user_submit").onclick = function() {
+                    var text = $('user_input');
+                    if (text.value === "") {
+                        return;
+                    }
+                    Observer.fire("addCommenMessage", {
+                        text: text.value,
+                        num: 1
+                    });
+                    text.value = "";
+                }
+            })();
+        }
+    </script>
+
+    <div id="msg_num">0</div>
+    <div id="msg"></div>
+    <div>
+
+        <input id="user_input" />
+        <button id="user_submit">提交</button>
+    </div>
+</body>
+
+</html>
