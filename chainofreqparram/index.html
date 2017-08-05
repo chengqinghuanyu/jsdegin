@@ -1,0 +1,121 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>职责链模式</title>
+
+</head>
+
+<body>
+    <script>
+        window.onload = function() {
+            /***
+             *异步请求模块
+             **/
+            var sendData = function(data, dealType, dom) {
+                //XHR对象简化版IE
+                var xhr = new XMLHttpRequest();
+                url = '';
+                //请求返回事件
+                xhr.onload = function(event) {
+                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+                        dealData(xhr.responseText, dealType, dom);
+                    } else {
+                        //请求失败
+                    }
+
+                }
+
+                for (var i in data) {
+                    url += "&" + "i" + "=" + data[i];
+                }
+                xhr.open("GET", url, true);
+                xhr.send(null);
+            }
+
+
+            /**
+            
+            *相应处理
+            */
+            var dealData = function(data, deatlType, dom) {
+                //对象toString()方法简化引用
+                var dataType = Object.prototype.toString.call(data);
+                switch (deatlType) {
+                    case 'sug':
+                        //数组数据
+                        if (dataType === "[object Array]") {
+                            return createSug(data, dom);
+                        }
+                        if (dataType === "[object Object]") {
+                            var newData = [];
+                            for (var i in data) {
+                                newData.push(data[i]);
+                            }
+                            return createSug(newData, dom);
+                        }
+                        //将数据转换为数组
+                        return createSug([data], dom);
+                        break;
+                    case 'validate':
+                        return createValidataResult(data, dom);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var createValidataResult = function(data, dom) {
+                dom.parentNode.getElementsByTagName('span')[0].innerHTML = data;
+
+                console.log(data, dom, 'createValidataResult');
+            }
+            var createSug = function(data, dom) {
+                var i = 0,
+                    len = data.length,
+                    html = '';
+                for (; i < len; i++) {
+                    html += '<li>' + data[i] + '</li>';
+                }
+                dom.parentNode.getElementsByTagName("ul")[0].innerHTML = html;
+                console.log(data, dom, 'createsugresult');
+            }
+            var input = document.getElementsByTagName("input");
+            // dealData('用户名不正确', 'validate', input[0]);
+            // dealData(123, 'sug', input[1]);
+            // dealData(['爱奇艺', '阿里巴巴', '爱漫画'], 'sug', input[1]);
+            // dealData({
+            //         'aqi': '爱奇艺',
+            //         'albb': '阿里巴巴',
+            //         'imh': '爱漫画'
+            //     },
+            //     'sug', input[1]
+            // );
+
+            input[0].onchange = function(e) {
+                sendData({
+                    value: input[0].value
+                }, 'validate', input[0]);
+            }
+            input[1].onkeydown = function() {
+                sendData({
+                    value: input[1].value
+                }, 'sug', input[1]);
+            }
+        }
+    </script>
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <span></span>
+    <input type="button">
+    <ul>
+    </ul>
+
+
+
+</body>
+
+</html>
